@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { path } from 'app-root-path';
 import { format } from 'date-fns';
 import { ensureDir, writeFile } from 'fs-extra';
+import * as sharp from 'sharp';
 import { FileElementResponse } from './dto/file-element.response';
+import { MFile } from './mfile.class';
 
 @Injectable()
 export class FilesService {
-  async saveFiles(
-    files: Express.Multer.File[],
-  ): Promise<FileElementResponse[]> {
+  async saveFiles(files: MFile[]): Promise<FileElementResponse[]> {
     const dateFolder = format(new Date(), 'yyyy-MM-dd');
     const uploadFolder = `${path}/uploads/${dateFolder}`;
     await ensureDir(uploadFolder);
@@ -21,5 +21,9 @@ export class FilesService {
       });
     }
     return res;
+  }
+
+  convertToWebP(file: Buffer): Promise<Buffer> {
+    return sharp(file).webp().toBuffer();
   }
 }
