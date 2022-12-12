@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+#uploaded files
+/uploads
+
 # env
 .env
 
